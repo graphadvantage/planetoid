@@ -2,7 +2,7 @@
 from scipy import sparse as sp
 from ind_model import ind_model as model
 import argparse
-import pickle
+import cPickle
 
 DATASET = 'citeseer'
 
@@ -30,8 +30,7 @@ def comp_accu(tpy, ty):
 NAMES = ['x', 'y', 'tx', 'ty', 'allx', 'graph']
 OBJECTS = []
 for i in range(len(NAMES)):
-    with open("data/ind.{}.{}".format(DATASET, NAMES[i]), 'rb') as f:
-            OBJECTS.append(pickle.load(f, encoding='latin1'))
+    OBJECTS.append(cPickle.load(open("data/ind.{}.{}".format(DATASET, NAMES[i]))))
 x, y, tx, ty, allx, graph = tuple(OBJECTS)
 
 m = model(args)                                                 # initialize the model
@@ -43,7 +42,7 @@ while True:
     m.step_train(max_iter = 1, iter_graph = 0.1, iter_inst = 1, iter_label = 0) # perform a training step
     tpy = m.predict(tx)                                                         # predict the dev set
     accu = comp_accu(tpy, ty)                                                   # compute the accuracy on the dev set
-    print(iter_cnt, accu, max_accu)
+    print iter_cnt, accu, max_accu
     iter_cnt += 1
     if accu > max_accu:
         m.store_params()                                                        # store the model if better result is obtained

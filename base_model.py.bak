@@ -1,6 +1,6 @@
 
 import lasagne
-import pickle
+import cPickle
 import random
 import numpy as np
 
@@ -16,10 +16,10 @@ class base_model(object):
         self.batch_size = args.batch_size
         self.neg_samp = args.neg_samp
         self.model_file = args.model_file
-
+        
         self.window_size = args.window_size
         self.path_size = args.path_size
-
+        
         self.g_batch_size = args.g_batch_size
         self.g_learning_rate = args.g_learning_rate
         self.g_sample_size = args.g_sample_size
@@ -40,11 +40,11 @@ class base_model(object):
     def store_params(self):
         """serialize the model parameters in self.model_file.
         """
-# added 'wb' for 2 to 3 compatibility
+
         for i, l in enumerate(self.l):
-            fout = open("{}.{}".format(self.model_file, i), 'wb')
+            fout = open("{}.{}".format(self.model_file, i), 'w')
             params = lasagne.layers.get_all_param_values(l)
-            pickle.dump(params, fout, pickle.HIGHEST_PROTOCOL)
+            cPickle.dump(params, fout, cPickle.HIGHEST_PROTOCOL)
             fout.close()
 
     def load_params(self):
@@ -52,7 +52,7 @@ class base_model(object):
         """
         for i, l in enumerate(self.l):
             fin = open("{}.{}".format(self.model_file, i))
-            params = pickle.load(fin)
+            params = cPickle.load(fin)
             lasagne.layers.set_all_param_values(l, params)
             fin.close()
 
@@ -71,3 +71,6 @@ class base_model(object):
         """
         self.init_train(init_iter_label, init_iter_graph)
         self.step_train(max_iter, iter_graph, iter_inst, iter_label)
+
+
+
