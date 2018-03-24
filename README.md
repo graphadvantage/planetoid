@@ -73,16 +73,3 @@ You can use `cPickle.load(open(filename))` to load the numpy/scipy objects `x`, 
 
 Refer to `test_ind.py` and `test_trans.py` for the definition of different hyper-parameters (passed as arguments). Hyper-parameters are tuned by randomly shuffle the training/test split (i.e., randomly shuffling the indices in `x`, `y`, `tx`, `ty`, and `graph`). For the DIEL dataset, we tune the hyper-parameters on one of the ten runs, and then keep the same hyper-parameters for all the ten runs.
 
-# 3.5 Install Notes
-
-This was ported to Python3 using 2to3
-
-There is a Lasagne incompatibility with Theanos in the standard distributions.
-
-http://lasagne.readthedocs.io/en/latest/user/installation.html
-
-Install latest versions:
-
-`pip install --upgrade https://github.com/Theano/Theano/archive/master.zip`
-
-`pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip`

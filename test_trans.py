@@ -2,10 +2,9 @@
 from scipy import sparse as sp
 from trans_model import trans_model as model
 import argparse
-import pickle
+import cPickle
 
-
-DATASET = 'cora'
+DATASET = 'citeseer'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--learning_rate', help = 'learning rate for supervised loss', type = float, default = 0.1)
@@ -27,12 +26,11 @@ def comp_accu(tpy, ty):
     import numpy as np
     return (np.argmax(tpy, axis = 1) == np.argmax(ty, axis = 1)).sum() * 1.0 / tpy.shape[0]
 
-# load the data: x, y, tx, ty, graph - added 'rb' encoding='latin1' for 2 to 3 compatibility
+# load the data: x, y, tx, ty, graph
 NAMES = ['x', 'y', 'tx', 'ty', 'graph']
 OBJECTS = []
 for i in range(len(NAMES)):
-    with open("data/trans.{}.{}".format(DATASET, NAMES[i]), 'rb') as f:
-            OBJECTS.append(pickle.load(f, encoding='latin1'))
+    OBJECTS.append(cPickle.load(open("data/trans.{}.{}".format(DATASET, NAMES[i]))))
 x, y, tx, ty, graph = tuple(OBJECTS)
 
 m = model(args)                                             # initialize the model
@@ -44,7 +42,7 @@ while True:
     m.step_train(max_iter = 1, iter_graph = 0, iter_inst = 1, iter_label = 0)   # perform a training step
     tpy = m.predict(tx)                                                         # predict the dev set
     accu = comp_accu(tpy, ty)                                                   # compute the accuracy on the dev set
-    print(iter_cnt, accu, max_accu)
+    print iter_cnt, accu, max_accu
     iter_cnt += 1
     if accu > max_accu:
         m.store_params()                                                        # store the model if better result is obtained
