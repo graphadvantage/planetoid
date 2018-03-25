@@ -86,3 +86,36 @@ Install latest versions:
 `pip install --upgrade https://github.com/Theano/Theano/archive/master.zip`
 
 `pip install --upgrade https://github.com/Lasagne/Lasagne/archive/master.zip`
+
+On Windows I and since I had put Cuda on my D: drive
+
+included in my tensorflow env
+
+conda install theano, m2w64-openblas, mkl-service
+
+
+edited theanorc
+```
+[cuda]
+root=D:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v8.0
+
+[nvcc]
+flags=-LC:\Anaconda\libs
+fastmath=True
+compiler_bindir=C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin
+
+[global]
+device = cuda
+optimizer_including = cudnn
+floatX = float32
+
+[dnn]
+dnn.enabled = 'True'
+base_path = D:/cudnn-8.0-windows10-x64-v7.1/cuda
+bin_path = D:/cudnn-8.0-windows10-x64-v7.1/cuda/bin
+library_path = D:/cudnn-8.0-windows10-x64-v7.1/cuda/lib/x64
+include_path = D:/cudnn-8.0-windows10-x64-v7.1/cuda/include
+conv.algo_bwd_filter = deterministic
+conv.algo_bwd_data = deterministic
+
+```
