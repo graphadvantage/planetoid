@@ -3,9 +3,10 @@ from scipy import sparse as sp
 from trans_model import trans_model as model
 import argparse
 import pickle
+import time
 
 
-DATASET = 'cora'
+DATASET = 'pubmed'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--learning_rate', help = 'learning rate for supervised loss', type = float, default = 0.1)
@@ -40,12 +41,22 @@ m.add_data(x, y, graph)                                     # add data
 m.build()                                                   # build the model
 m.init_train(init_iter_label = 2000, init_iter_graph = 70)  # pre-training
 iter_cnt, max_accu = 0, 0
+t0 = time.time()
+te = 0
+
 while True:
     m.step_train(max_iter = 1, iter_graph = 0, iter_inst = 1, iter_label = 0)   # perform a training step
     tpy = m.predict(tx)                                                         # predict the dev set
-    accu = comp_accu(tpy, ty)                                                   # compute the accuracy on the dev set
-    print(iter_cnt, accu, max_accu)
+    accu = comp_accu(tpy, ty)
+    te = round(((time.time() - t0)*1000)/1000,3)                                       # compute the accuracy on the dev set
+    print(iter_cnt, accu, max_accu, " secs elapsed time since last best model --> ", te, end = '\r')                                                   # compute the accuracy on the dev set
     iter_cnt += 1
+
+    if te > 360:  # time limit on result accuracy
+        break
+
     if accu > max_accu:
+        print('----------------------------------> storing new best model')
+        t0 = time.time()
         m.store_params()                                                        # store the model if better result is obtained
         max_accu = max(max_accu, accu)
